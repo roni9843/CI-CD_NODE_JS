@@ -55,5 +55,5 @@ app.post('/data', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`0.1.4 Server is running on http://localhost:${PORT}`);
+  console.log(`0.1.5 Server is running on http://localhost:${PORT}`);
 });
