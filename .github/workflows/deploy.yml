@@ -16,9 +16,10 @@ jobs:
       - name: Deploy with Docker
         uses: appleboy/ssh-action@master
         with:
-          host: yeestoc3@104.161.43.62
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/yeestoc3/testcicd  
+            cd /home/yeestoc3/testcicd  # তোমার সঠিক প্রজেক্ট পাথ
             git pull origin main
             docker-compose up -d --build --force-recreate
