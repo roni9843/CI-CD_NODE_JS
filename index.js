@@ -8,14 +8,21 @@ const DATA_FILE = path.join(__dirname, 'data.json');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+// Serve static files from the 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // --- GET: Health Check Route ---
 app.get('/health', (req, res) => {
   res.status(200).send('OK 2.6');
 });
 
+// --- GET: Serve HTML page for root ---
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // --- GET: Get all data from data.json ---
-app.get('/', async (req, res) => {
+app.get('/api/data', async (req, res) => {
   try {
     const data = await fs.readFile(DATA_FILE, 'utf8');
     res.status(200).json(JSON.parse(data));
@@ -49,7 +56,7 @@ app.post('/data', async (req, res) => {
 
     res.status(201).json({ message: 'Data added successfully', data: newData });
   } catch (error) {
-    console.error('Error writing to data.json:', error);
+    console.error('Error personally writing to data.json:', error);
     res.status(500).json({ error: 'Failed to write data' });
   }
 });
