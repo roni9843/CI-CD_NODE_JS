@@ -3,7 +3,7 @@ name: Deploy to Satistfy Host
 on:
   push:
     branches:
-      - main
+      - main  # শুধু main branch push হলে deploy হবে
 
 jobs:
   deploy:
@@ -21,8 +21,8 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no yeestoc3@104.161.43.62 "
-            cd 	/home/yeestoc3/testcicd &&
+            cd /home/yeestoc3/testcicd &&
             git pull origin main &&
             npm install &&
-            pm2 restart myapp || pm2 start index.js --name myapp
+            pm2 restart testcicd || pm2 start index.js --name testcicd
           "
