@@ -17,9 +17,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_USER_HOST }}
-          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd yeestoc3/testcicd  # তোমার প্রজেক্টের সঠিক পাথ দাও
+            cd /home/yeestoc3/testcicd  
             git pull origin main
             docker-compose up -d --build --force-recreate
