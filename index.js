@@ -11,7 +11,7 @@ app.use(express.json());
 
 // --- GET: Health Check Route ---
 app.get('/health', (req, res) => {
-  res.status(200).send('OK 2.3');
+  res.status(200).send('OK 2.4');
 });
 
 // --- GET: Get all data from data.json ---
