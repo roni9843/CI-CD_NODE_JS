@@ -16,7 +16,7 @@ jobs:
       - name: Deploy with Docker
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_USER_HOST }}
+          host: yeestoc3@104.161.43.62
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/yeestoc3/testcicd  
