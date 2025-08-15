@@ -1,33 +1,46 @@
 name: Deploy to Satistfy Host
 
+# Trigger workflow on push to main branch
 on:
   push:
     branches:
-      - main  # শুধু main branch push হলে deploy হবে
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # Step 1: Checkout the code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Setup SSH key
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to server
+      # Step 3: Deploy code on server
+      - name: Deploy to Satistfy Host
         run: |
           ssh -o StrictHostKeyChecking=no yeestoc3@104.161.43.62 "
-            echo 'Deploying to Satistfy Host...'
+            echo 'Starting deployment...'
+            
+            # Go to project directory
             cd /home/yeestoc3/testcicd || exit 1
+            
+            # Pull latest code
             echo 'Pulling latest code...'
             git pull origin main
-            echo 'Installing dependencies...'
+            
+            # Install dependencies
+            echo 'Installing npm packages...'
             /usr/local/bin/npm install
-            echo 'Restarting app with PM2...'
+            
+            # Restart Node.js process with PM2
+            echo 'Restarting Node.js app with PM2...'
             /usr/local/bin/pm2 restart testcicd || /usr/local/bin/pm2 start index.js --name testcicd -f
+            
             echo 'Deployment completed successfully!'
           "
