@@ -21,8 +21,13 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no yeestoc3@104.161.43.62 "
-            cd /home/yeestoc3/testcicd &&
-            git pull origin main &&
-            npm install &&
-            pm2 restart testcicd || pm2 start index.js --name testcicd
+            echo 'Deploying to Satistfy Host...'
+            cd /home/yeestoc3/testcicd || exit 1
+            echo 'Pulling latest code...'
+            git pull origin main
+            echo 'Installing dependencies...'
+            /usr/local/bin/npm install
+            echo 'Restarting app with PM2...'
+            /usr/local/bin/pm2 restart testcicd || /usr/local/bin/pm2 start index.js --name testcicd -f
+            echo 'Deployment completed successfully!'
           "
