@@ -1,4 +1,4 @@
-name: Docker CI/CD on Push
+name: Deploy to Satistfy Host
 
 on:
   push:
@@ -11,15 +11,18 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Deploy with Docker
-        uses: appleboy/ssh-action@master
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/yeestoc3/testcicd  # তোমার সঠিক প্রজেক্ট পাথ
-            git pull origin main
-            docker-compose up -d --build --force-recreate
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no yeestoc3@104.161.43.62 "
+            cd 	/home/yeestoc3/testcicd &&
+            git pull origin main &&
+            npm install &&
+            pm2 restart myapp || pm2 start index.js --name myapp
+          "
