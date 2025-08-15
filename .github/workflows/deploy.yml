@@ -1,6 +1,5 @@
-name: Deploy to Satistfy Host
+name: Deploy to Satisfy Host
 
-# Trigger workflow on push to main branch
 on:
   push:
     branches:
@@ -11,36 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Setup SSH key
+      # 2️⃣ Setup SSH key
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Step 3: Deploy code on server
-      - name: Deploy to Satistfy Host
+      # 3️⃣ Deploy code to server
+      - name: Deploy to Satisfy Host
         run: |
           ssh -o StrictHostKeyChecking=no yeestoc3@104.161.43.62 "
-            echo 'Starting deployment...'
-            
+            echo '🚀 Starting deployment...'
+
             # Go to project directory
             cd /home/yeestoc3/testcicd || exit 1
-            
+
             # Pull latest code
-            echo 'Pulling latest code...'
+            echo '📥 Pulling latest code...'
+            git reset --hard
             git pull origin main
-            
+
             # Install dependencies
-            echo 'Installing npm packages...'
-            /usr/local/bin/npm install
-            
-            # Restart Node.js process with PM2
-            echo 'Restarting Node.js app with PM2...'
-            /usr/local/bin/pm2 restart testcicd || /usr/local/bin/pm2 start index.js --name testcicd -f
-            
-            echo 'Deployment completed successfully!'
+            echo '📦 Installing npm packages...'
+            /usr/local/bin/npm install --production
+
+            # Restart Passenger app (Node.js)
+            echo '♻ Restarting Passenger app...'
+            mkdir -p tmp
+            touch tmp/restart.txt
+
+            echo '✅ Deployment completed successfully!'
           "
